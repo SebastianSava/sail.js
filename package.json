@@ -1,0 +1,27 @@
+{
+  "name": "sail.js",
+  "version": "1.0.2",
+  "license": "MIT",
+  "description": "Sailing Through Scripts: Smooth Library Loading Ahead.",
+  "main": "dist/sail.js",
+  "author": {
+    "name": "Sava Sebastian-Florin",
+    "url": "https://sava-sebastian.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SebastianSava/sail.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SebastianSava/sail.js/issues"
+  },
+  "scripts": {
+    "build": "grunt"
+  },
+  "devDependencies": {
+    "grunt": "^1.6.1",
+    "grunt-contrib-concat": "^2.1.0",
+    "grunt-contrib-uglify": "^5.2.2"
+  }
+}
+

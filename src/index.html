@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sail.js</title>
+  </head>
+  <body>
+    <script src="./sail.js"></script>
+
+    <script>
+      sail.ready(function (files) {
+        console.log(this, files);
+      });
+
+      sail.init({
+        files: [
+          'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.10/cdn.js?v=1'
+        ],
+        name: 'a',
+        onComplete: function (files) {
+          console.log(this, files);
+        }
+      });
+
+      sail.init({
+        name: 'b',
+        files: [
+          'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js',
+          'https://unpkg.com/aos@2.3.1/dist/aos.js',
+          'https://unpkg.com/aos@2.3.1/dist/aos.css'
+        ]
+      });
+    </script>
+  </body>
+</html>
