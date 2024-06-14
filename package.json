@@ -1,6 +1,6 @@
 {
   "name": "sail.js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "description": "Sailing Through Scripts: Smooth Library Loading Ahead.",
   "main": "dist/sail.js",

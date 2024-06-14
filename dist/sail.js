@@ -1,12 +1,12 @@
 /**!
- * sail.js 1.0.2
+ * sail.js 1.0.3
  * Sailing Through Scripts: Smooth Library Loading Ahead.
  * https://github.com/SebastianSava/sail.js.git
  *
  * (c) Sava Sebastian-Florin (https://sava-sebastian.dev)
  * Released under the MIT License
  *
- * Date: 2024-05-14T06:48:09.350Z
+ * Date: 2024-06-14T08:40:36.665Z
  */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -154,14 +154,19 @@
 
       if (typeof callback !== 'function') return;
 
-      // Load specific set of files
-      if (typeof name === 'string')
-        window.addEventListener(`lib:${name}`, callback, false);
-
-      // Load all files
-      if (typeof name !== 'string')
+      if (typeof name === 'string') {
+        // Load specific set of files
         window.addEventListener(
-          'lib:all',
+          `Sail::${name}`,
+          function ({ detail }) {
+            callback.apply(api, [detail.assets]);
+          },
+          false
+        );
+      } else {
+        // Load all files
+        window.addEventListener(
+          'Sail::All',
           function () {
             localCalls++; // increase the number of local calls
 
@@ -169,6 +174,7 @@
           },
           false
         );
+      }
     };
 
     /**
@@ -197,7 +203,9 @@
         if (
           globalAssets.some(
             (e) =>
-              e.name === fileAsset.name && e.extension === fileAsset.extension
+              e.name === fileAsset.name &&
+              e.extension === fileAsset.extension &&
+              e.url === fileAsset.url
           )
         )
           continue;
@@ -222,9 +230,13 @@
 
         // Execute the event
         if (typeof name === 'string')
-          window.dispatchEvent(new Event(`lib:${name}`));
+          window.dispatchEvent(
+            new CustomEvent(`Sail::${name}`, {
+              detail: { assets: localAssets }
+            })
+          );
 
-        window.dispatchEvent(new Event('lib:all'));
+        window.dispatchEvent(new Event('Sail::All'));
       });
     };
 

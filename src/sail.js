@@ -144,14 +144,19 @@
 
       if (typeof callback !== 'function') return;
 
-      // Load specific set of files
-      if (typeof name === 'string')
-        window.addEventListener(`lib:${name}`, callback, false);
-
-      // Load all files
-      if (typeof name !== 'string')
+      if (typeof name === 'string') {
+        // Load specific set of files
         window.addEventListener(
-          'lib:all',
+          `Sail::${name}`,
+          function ({ detail }) {
+            callback.apply(api, [detail.assets]);
+          },
+          false
+        );
+      } else {
+        // Load all files
+        window.addEventListener(
+          'Sail::All',
           function () {
             localCalls++; // increase the number of local calls
 
@@ -159,6 +164,7 @@
           },
           false
         );
+      }
     };
 
     /**
@@ -187,7 +193,9 @@
         if (
           globalAssets.some(
             (e) =>
-              e.name === fileAsset.name && e.extension === fileAsset.extension
+              e.name === fileAsset.name &&
+              e.extension === fileAsset.extension &&
+              e.url === fileAsset.url
           )
         )
           continue;
@@ -212,9 +220,13 @@
 
         // Execute the event
         if (typeof name === 'string')
-          window.dispatchEvent(new Event(`lib:${name}`));
+          window.dispatchEvent(
+            new CustomEvent(`Sail::${name}`, {
+              detail: { assets: localAssets }
+            })
+          );
 
-        window.dispatchEvent(new Event('lib:all'));
+        window.dispatchEvent(new Event('Sail::All'));
       });
     };
 
