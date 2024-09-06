@@ -1,12 +1,12 @@
 /**!
- * sail.js 1.0.3
+ * sail.js 1.0.4
  * Sailing Through Scripts: Smooth Library Loading Ahead.
  * https://github.com/SebastianSava/sail.js.git
  *
  * (c) Sava Sebastian-Florin (https://sava-sebastian.dev)
  * Released under the MIT License
  *
- * Date: 2024-06-14T08:40:36.665Z
+ * Date: 2024-09-06T20:37:00.621Z
  */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -42,15 +42,15 @@
      * @param {string} fileExt - The extension of the file ('js' for JavaScript or 'css' for CSS).
      * @return {Promise} A Promise that resolves when the file is successfully loaded, and rejects if an error occurs.
      */
-    const loadFile = function (url, fileExt) {
+    const loadFile = function (url, fileExt, async) {
       return new Promise((resolve, reject) => {
         let file;
 
         if (fileExt === 'js') {
           file = document.createElement('script');
 
-          file.async = false;
-          file.defer = true;
+          file.async = async;
+          file.defer = !async;
           file.src = url;
           file.type = 'text/javascript';
         } else if (fileExt === 'css') {
@@ -134,6 +134,42 @@
     };
 
     /**
+     * A function that triggers a callback when a user interacts with the browser window.
+     *
+     * @private
+     * @param {Function} cb - The callback function to execute when a user interaction is detected.
+     * @return {void}
+     */
+    const userInteraction = function (cb) {
+      if (typeof cb !== 'function') return;
+
+      const triggerEvents = [
+        'keydown',
+        'mousedown',
+        'mousemove',
+        'touchmove',
+        'touchstart',
+        'touchend',
+        'wheel'
+      ];
+
+      const listener = function () {
+        triggerEvents.forEach(function (event) {
+          window.removeEventListener(event, listener, {
+            once: true,
+            passive: true
+          });
+        });
+
+        cb.apply(null);
+      };
+
+      triggerEvents.forEach(function (event) {
+        window.addEventListener(event, listener, { once: true, passive: true });
+      });
+    };
+
+    /**
      * Executes a callback function when all specified assets are ready. If no arguments are provided,
      * waits for all global assets to be ready before executing the callback. If a callback is not
      * provided, does nothing.
@@ -187,7 +223,7 @@
      *   - onComplete: A callback function to be executed when all files have been loaded.
      * @return {void}
      */
-    api.init = function ({ name, files, onComplete }) {
+    api.init = function ({ async = false, files = [], name, onComplete }) {
       if (!supports || !files.length) return;
 
       files = [...new Set(files)]; // remove duplicates
@@ -210,7 +246,7 @@
         )
           continue;
 
-        fileAsset.promise = loadFile(fileAsset.url, fileAsset.extension);
+        fileAsset.promise = loadFile(fileAsset.url, fileAsset.extension, async);
 
         // Add the asset to the global lists
         globalAssets.push(fileAsset);
@@ -240,6 +276,15 @@
       });
     };
 
-    return api;
+    return {
+      ...api,
+      init: function ({ onInteraction = false }) {
+        const args = arguments;
+
+        if (onInteraction) return userInteraction(api.init.bind(api, ...args));
+
+        return api.init.apply(api, args);
+      }
+    };
   }
 );

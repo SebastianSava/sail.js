@@ -33,6 +33,8 @@ You can load your files using `sail.init` method as shown below:
 
 ```javascript
 sail.init({
+  async: true,
+  onInteraction: false,
   name: 'example',
   files: [
     'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js',
@@ -71,9 +73,11 @@ Initializes the loading process for the specified assets.
 **Parameters**
 
 - `options` (Object):
-  - `name`: Identifier for the set of assets (optional).
+  - `async`: Load JavaScript files asynchronously (optional).
   - `files`: Array of URLs for the files to load (required).
+  - `name`: Identifier for the set of assets (optional).
   - `onComplete`: Callback function executed once all files are loaded (optional).
+  - `onInteraction`: Delay loading of files until user interaction (optional).
 
 ### `sail.ready(name, callback)`
 

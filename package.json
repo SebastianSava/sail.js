@@ -1,6 +1,6 @@
 {
   "name": "sail.js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MIT",
   "description": "Sailing Through Scripts: Smooth Library Loading Ahead.",
   "main": "dist/sail.js",
@@ -24,4 +24,3 @@
     "grunt-contrib-uglify": "^5.2.2"
   }
 }
-
